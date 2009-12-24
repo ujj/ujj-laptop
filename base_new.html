@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %} | New Post{% endblock %}
+
+{% block content %}
+<div id="main">
+{{ greeting }}
+
+{% if show_new_form %}
+<form name="enter" action="/post" method="POST" onsubmit="return validate_form ();">
+					<table>
+					<tr><td><input type="text" name="title" value="title" size="53"></td></tr>
+					<tr><td><textarea name="content" rows="15" cols="60">type in your post</textarea></td></tr>
+					<tr><td><textarea name="summary" rows="5" cols="60">type in the summary</textarea></td></tr>
+					<tr><td><input type="text" name="tags" value="csv tags"></td></tr>
+					<tr><td>Type: <select name="type">
+					<option value="blog">blog</option>
+					<option value="code">code</option>
+					<option value="links">link</option>
+					<option value="about">about</option>
+					</select>
+					</td></tr>
+					<tr><td><input type="submit" value="publish" rows="20"></td></tr>
+					</table>
+					</form>
+</div>
+{% endif %}
+
+{% endblock %}
+
+
+{% block sidebar %}
+<div id="sidebar">
+</div>
+{% endblock %}

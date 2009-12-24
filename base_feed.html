@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <title>ujj-laptop | ujjwal grover's blog</title>
+    <link>http://www.ujj-laptop.com/</link>
+    <description>ujjwal grover's official blog/site containing personal incidents, journeys, technical findings and his self proclaimed expert comments on the game he never learnt to play well enough (cricket).</description>
+    <image>
+        <url>http://dl.dropbox.com/u/3259703/my.ico</url> 
+    </image>
+	{% for post in posts %}
+    <item> 
+       <title>{{ post.title }}</title>
+       <link>http://www.ujj-laptop.com/?i={{ post.content_id }}</link>  
+       <description>{{ post.summary }}</description>
+    </item> 
+	{% endfor %}
+  </channel>
+</rss>

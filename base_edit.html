@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %} | Edit Post  {{ post.0.title}} {% endblock %}
+
+{% block content %}
+<div id="main">
+{{ greeting }}
+
+{% if show_new_form %}
+<form name="enter" action="/post" method="POST" onsubmit="return validate_form ();">
+					<table>
+					<tr><td><input type="text" name="title" value="{{ post.0.title }}" size="53"></td></tr>
+					<tr><td><textarea name="content" rows="15" cols="60">{{ post.0.text }}</textarea></td></tr>
+					<tr><td><textarea name="summary" rows="5" cols="60">{{ post.0.summary }}</textarea></td></tr>
+					<tr><td>Type: <select name="type">
+					<option value="blog">blog</option>
+					<option value="links">link</option>
+					<option value="code">code</option>
+					<option value="about">about</option>
+					</select>
+					</td></tr>
+					<tr><td><input type="submit" value="publish" rows="20"></td></tr>
+					<input type="hidden" name="i" value="{{ post.0.content_id }}"/>
+					</table>
+					</form>
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block sidebar %}
+<div id="sidebar">
+sidebar
+</div>
+{% endblock %}

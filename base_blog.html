@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if single %}
+	| {{ post.0.title }}	
+{% else %}
+    {% if not cat %}
+        | ujjwal grover's blog
+    {% else %}     
+         {% ifequal cat "about" %}
+            | about
+         {% else %}
+            | ujjwal grover's {{cat}} posts
+         {% endifequal %}
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+{% block keywords %}
+{% if single %}
+	{{ tags }}	
+{% else %}
+	ujj, ujjwal grover, site, blog, technical profile, resume, tempostand, cricroar developer
+{% endif %}
+{% endblock %}
+
+{% block description %}
+{% if single %}
+	{{ post.0.summary }}	
+{% else %}
+	Ujjwal Grover's official blog/site containing personal incidents, journeys, technical findings and his self proclaimed expert comments on the game he never learnt to play well enough (cricket).
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+<div id="main">
+
+{% if single %}
+<h2 class="posttitle">{{ post.0.title }}</h2>
+<p>{{ post.0.text}}</p>
+<p><i><a href="/?i={{ post.0.content_id }}#disqus_thread"></a></i></p>
+<div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/ujj-laptop/embed.js"></script><noscript><a href="http://disqus.com/forums/ujj-laptop/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+{% else %}
+{% for post in posts %}
+<h2 class="posttitle"><a class="posttitle" href="?i={{ post.content_id }}">{{ post.title }}</a></h2>
+<p>{{ post.summary}} <a href="/?i={{ post.content_id }}">read full</a> </p>
+<br>
+{% endfor %}
+{% endif %}
+
+{% if next %}
+<div id="paginat">
+<a href="/?bookmark={{ next }}">older</a>
+</div>
+{% endif %}
+</div>
+{% endblock %}
+
+

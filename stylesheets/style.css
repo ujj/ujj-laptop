@@ -1,0 +1,99 @@
+/* 
+about : a minimalistic vanilla style design, 3 column, why? because I like  :)
+author: Ujj
+authorURI: http://ujjwalgrover.blogspot.com
+*/
+
+#body-container {
+width: 900px;
+overflow:auto;
+padding:0px;
+margin:0px auto;
+font-family: bitstream charter;
+}
+
+#header-img {
+width: 854px;
+height: 35px;
+}
+
+#header-img img {
+display: block;
+}
+
+#nav-menu {
+width:650px;
+padding: 10px 10px 10px 10px;  	
+font-size: 14px;
+}
+
+#nav-menu a {
+color: #000;
+}
+
+#nav-menu a.present {
+text-decoration: underline;
+}
+
+#main {
+float: left;
+width:650px;
+padding: 10px 10px 10px 10px;
+font-size: 15px;
+color: #747162;
+}
+
+h2.posttitle {
+font-size: 23px;
+text-decoration: none;
+color: #3f9cc7;
+}
+
+h2 a {
+text-decoration: none;
+color: #5e8ba9;
+}
+
+h2 a:hover {
+text-decoration: underline;
+}
+
+a {
+text-decoration: none;
+color: #5e8ba9;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+#sidebar {
+float: right;
+width: 200px;
+font-size: 13px;
+}
+
+
+#footer {
+width: 600px;
+font-size: 11px;
+font-family: monospace;
+}
+
+ol.code {
+background: #e7e7f5;
+color: #333;
+margin: 0;
+padding: 0.5em;
+width: 55%;
+list-style: none;
+}
+ol.code li {
+border-bottom: 1px solid #666;
+}
+ol.code li#last {
+border-bottom: none;
+}
+ol.code code {
+font: small "Courier New", Courier, monospace;
+}
