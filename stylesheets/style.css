@@ -97,3 +97,7 @@ border-bottom: none;
 ol.code code {
 font: small "Courier New", Courier, monospace;
 }
+
+.datetext {
+font-size: 10px;
+}

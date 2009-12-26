@@ -38,6 +38,7 @@
 
 {% if single %}
 <h2 class="posttitle">{{ post.0.title }}</h2>
+<span class="datetext">published: {{ publish_date.day}} / {{ publish_date.month}} / {{ publish_date.year}}</span>
 <p>{{ post.0.text}}</p>
 <p><i><a href="/?i={{ post.0.content_id }}#disqus_thread"></a></i></p>
 <div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/ujj-laptop/embed.js"></script><noscript><a href="http://disqus.com/forums/ujj-laptop/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
@@ -51,7 +52,15 @@
 
 {% if next %}
 <div id="paginat">
-<a href="/?bookmark={{ next }}">older</a>
+{% if cat %}
+<a href="/?bookmark={{next}}&cat={{cat}}">older</a>
+{% endif %} 
+{% if tag %}
+<a href="/?bookmark={{next}}&tag={{tag}}">older</a>
+{% endif %}
+{% if not cat and not tag %}
+<a href="/?bookmark={{next}}">older</a>
+{% endif %}
 </div>
 {% endif %}
 </div>

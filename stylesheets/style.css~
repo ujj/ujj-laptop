@@ -46,12 +46,12 @@ color: #747162;
 h2.posttitle {
 font-size: 23px;
 text-decoration: none;
-color: #C1A305;
+color: #3f9cc7;
 }
 
 h2 a {
 text-decoration: none;
-color: #C1A305;
+color: #5e8ba9;
 }
 
 h2 a:hover {
@@ -60,7 +60,7 @@ text-decoration: underline;
 
 a {
 text-decoration: none;
-color: #C1A305;
+;
 }
 
 a:hover {
@@ -71,12 +71,12 @@ text-decoration: underline;
 float: right;
 width: 200px;
 font-size: 13px;
-
 }
+
 
 #footer {
 width: 600px;
-font-size: 10px;
+font-size: 11px;
 font-family: monospace;
 }
 
@@ -96,4 +96,8 @@ border-bottom: none;
 }
 ol.code code {
 font: small "Courier New", Courier, monospace;
+}
+
+.datetext {
+font-size: 10px;
 }

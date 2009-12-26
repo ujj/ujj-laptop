@@ -2,12 +2,15 @@ import os
 from google.appengine.ext.webapp import template
 
 import cgi
+import time
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
+from datetime import date
+
 
 class Content(db.Model):
     title = db.StringProperty()
@@ -57,7 +60,12 @@ class Blog(webapp.RequestHandler):
 				tagstr = tagstr + "," + tag.tag
 			else:
 				tagstr = tag.tag
-		template_values = { 'post': post, 'single': 1, 'tags' : tagstr, 'show_new_form': show_new_form, 'greeting':greeting}
+		#publish_date = date.fromtimestamp(time.time())
+		publish_date = dict()
+		publish_date['year'] = post[0].date.year
+		publish_date['day'] = post[0].date.day 
+		publish_date['month'] = post[0].date.month  
+		template_values = { 'post': post, 'single': 1, 'tags' : tagstr, 'show_new_form': show_new_form, 'greeting':greeting, 'publish_date':publish_date}
 	else:
                 if bookmark:         
                     content_query.filter("content_id <=", int(bookmark))
