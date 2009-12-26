@@ -1,9 +1,10 @@
 1. To add new posts, go to http://<your-appid>.appspot.com/new
 2. To edit an existing post go to http://<your-appid>.appspot.com/?i=<post_id>&e=1, where <post_id> is the content_id of your post
 3. The c param defines the category of the post. For ex, all posts under code category will be available at http://<your-appid>.appspot.com/?c=code
-
-
-LIMITATIONS -- probably for v 1.1
-1. You can delete a post once it is published
-2. No search
-3. No tag based search/lookup
+Talk to ujjwalgrover@gmail.com in case you have any doubts setting all this up.
+-----------------------------------------------------------------------------------
+LIMITATIONS/TODO probably for v 1.1
+1. You cannot delete a post once it is published
+2. No search -- need to do some workarounds since theres no 'like' like database lookup
+3. No tag based search/lookup -- easy. and boring. 
+4. Need to implement link-blog-posts ideas.
