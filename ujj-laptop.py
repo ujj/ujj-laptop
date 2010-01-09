@@ -99,50 +99,57 @@ class PublishFeed(webapp.RequestHandler):
             
 class PublishPost(webapp.RequestHandler):
     def post(self):
-        title = self.request.get('title')
-        content = self.request.get('content')
-        ptype = self.request.get('type')
-	summary = self.request.get('summary')
-	tagstr = self.request.get('tags')
-	content_id_str = self.request.get('i')
-	content_id = 0
-        if content_id_str:
-                content_id = int(content_id_str)
-	if (content_id):
-		content_query = Content.all()	
-		content_query.filter("content_id =",content_id)
-		post = content_query.fetch(1)
-		if post:
-			post[0].title = title
-		        post[0].text = content
-		        post[0].type = ptype
-			post[0].summary = summary
-			post[0].put()
-	else:
-		post = Content()
-	        post.title = title
-	        post.text = content
-	        post.type = ptype
-		post.summary = summary
-		post.put()
-        	content_id = post.key().id()
-	        post.content_id = int(content_id)
-       		post.put()
-	if (tagstr):
-		tags = tagstr.split(",")
-		for tag in tags:		
-			tagged = ContentTags()
-			tagged.tag = tag
-			tagged.content_id = content_id
-			tagged.put()		
-        status = "\m/ success"	    	 
-        template_values = {
-		  'status': status,
-		  'content_id': content_id,	
-		  }
-        path = os.path.join(os.path.dirname(__file__), 'base_posted.html')
-        self.response.out.write(template.render(path, template_values))
-
+	user = users.get_current_user()
+	content_id = None
+	if user:
+		if users.is_current_user_admin():            
+			title = self.request.get('title')
+			content = self.request.get('content')
+			ptype = self.request.get('type')
+			summary = self.request.get('summary')
+			tagstr = self.request.get('tags')
+			content_id_str = self.request.get('i')
+			content_id = 0
+			if content_id_str:
+				content_id = int(content_id_str)
+			if (content_id):
+				content_query = Content.all()	
+				content_query.filter("content_id =",content_id)
+				post = content_query.fetch(1)
+				if post:
+					post[0].title = title
+					post[0].text = content
+					post[0].type = ptype
+					post[0].summary = summary
+					post[0].put()
+			else:
+				post = Content()
+				post.title = title
+				post.text = content
+				post.type = ptype
+				post.summary = summary
+				post.put()
+				content_id = post.key().id()
+				post.content_id = int(content_id)
+		       		post.put()
+			if (tagstr):
+				tags = tagstr.split(",")
+				for tag in tags:		
+					tagged = ContentTags()
+					tagged.tag = tag
+					tagged.content_id = content_id
+					tagged.put()		
+			status = "\m/ success"	    	 
+			
+		else:
+			status = "\m/ authentication failure"	    	 		
+ 		
+  		template_values = {
+				  'status': status,
+				  'content_id': content_id,	
+				  }
+		path = os.path.join(os.path.dirname(__file__), 'base_posted.html')
+		self.response.out.write(template.render(path, template_values))
 
 class New(webapp.RequestHandler):
     def get(self):
