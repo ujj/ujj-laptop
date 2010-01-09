@@ -10,29 +10,8 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-# Used 5 times in query history.
 - kind: Content
   properties:
   - name: type
   - name: content_id
-    direction: desc
-
-# Unused in query history -- copied from input.
-- kind: Incident
-  properties:
-  - name: cid
-  - name: date
-    direction: desc
-
-# Unused in query history -- copied from input.
-- kind: Incident
-  properties:
-  - name: city_id
-  - name: date
-
-# Unused in query history -- copied from input.
-- kind: Incident
-  properties:
-  - name: city_id
-  - name: date
     direction: desc
