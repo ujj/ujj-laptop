@@ -20,7 +20,7 @@
 {% if single %}
 	{{ tags }}	
 {% else %}
-	ujj, ujjwal grover, site, blog, technical profile, resume, tempostand, cricroar developer
+	ujj, ujjwal grover, hacking, tutorials, cricket ramblings, site, blog, technical profile, resume, tempostand, cricroar developer
 {% endif %}
 {% endblock %}
 
@@ -46,7 +46,7 @@
 {% for post in posts %}
 <h2 class="posttitle"><a class="posttitle" href="?i={{ post.content_id }}">{{ post.title }}</a></h2>
 <p>{{ post.summary}} <a href="/?i={{ post.content_id }}">read full</a> </p>
-<br>
+<br/>
 {% endfor %}
 {% endif %}
 
