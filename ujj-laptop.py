@@ -21,8 +21,9 @@ class Content(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)  
 
 class ContentTags(db.Model): 
-    content_id = db.IntegerProperty()
-    tag = db.StringProperty()	
+    tag = db.StringProperty()
+    content = db.ReferenceProperty(Content, collection_name='matched_posts')	
+
 
 class Blog(webapp.RequestHandler):
     def get(self):
@@ -52,7 +53,7 @@ class Blog(webapp.RequestHandler):
 	if (pid):
 		content_query.filter("content_id =",int(pid))
 		post = content_query.fetch(1)
-		tags_query.filter("content_id =",int(pid))
+		tags_query.filter("content =",post)
 		tags = tags_query.fetch(5)
 		tagstr = ""
 		for tag in tags:
@@ -137,7 +138,7 @@ class PublishPost(webapp.RequestHandler):
 				for tag in tags:		
 					tagged = ContentTags()
 					tagged.tag = tag
-					tagged.content_id = content_id
+					tagged.content = post
 					tagged.put()		
 			status = "\m/ success"	    	 
 			
