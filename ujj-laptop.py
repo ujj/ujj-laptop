@@ -24,6 +24,18 @@ class Content(db.Model):
 class Tags(db.Model): 
     tag = db.StringProperty()
 
+class ShowTags(webapp.RequestHandler):
+    def get(self):
+        t = self.request.get('t')
+        tags = None
+        if t:
+            print t
+            tags = Tags.all().filter("tag =",t).get()
+            print tags.key()
+        else:
+            tags = Tags.all().fetch(10)
+        for tag in tags:
+            print tag.tag
 
 class Blog(webapp.RequestHandler):
     def get(self):
@@ -70,13 +82,15 @@ class Blog(webapp.RequestHandler):
                 posts = None
                 if bookmark:         
                     content_query.filter("content_id <=", int(bookmark))
-                if cat:
+                if t: 
+                    tag_key = Tags.all().filter("tag =",t).get()
+                    posts = Content.all().filter("tags =",tag_key.key()).fetch(PAGESIZE + 1) 
+                elif cat:
                     content_query.filter("type =",cat)
                 else: 
                     content_query.order('-content_id')
                     posts = content_query.fetch(PAGESIZE + 1)
-                    if t:
-                        posts = posts.matched_tags.filter("tag =",t)
+                        
 		if len(posts) == PAGESIZE + 1:
                     next = posts[-1].content_id              
                 posts = posts[:PAGESIZE]    
@@ -141,9 +155,11 @@ class PublishPost(webapp.RequestHandler):
 				for tag in tags:		
 					tag_key = Tags.all().filter("tag =",tag).get()
                                         if not tag_key:
-                                            tag_key = Tags(tag = tag).put()
-                                        if tag_key not in post.tags:
-                                            post.tags.append(tag_key)
+                                            stag = tag.strip()
+                                            Tags(tag = stag).put()
+                                            tag_key = Tags.all().filter("tag =",stag).get()
+                                        if tag_key.key() not in post.tags:     
+                                            post.tags.append(tag_key.key())
                                 post.put()            
 			status = "\m/ success"	    	 
 			
@@ -181,6 +197,7 @@ application = webapp.WSGIApplication([('/', Blog),
 				      ('/new', New),
 				      ('/post', PublishPost),	
                                       ('/feed', PublishFeed),
+                                      ('/ts', ShowTags),
 				      ('/edit', Blog),],debug=True)
 
 
