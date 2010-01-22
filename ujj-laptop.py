@@ -19,16 +19,17 @@ class Content(db.Model):
     type = db.StringProperty()
     summary = db.StringProperty()
     date = db.DateTimeProperty(auto_now_add=True)  
+    tags = db.ListProperty(db.Key)
 
-class ContentTags(db.Model): 
+class Tags(db.Model): 
     tag = db.StringProperty()
-    content = db.ReferenceProperty(Content, collection_name='matched_posts')	
 
 
 class Blog(webapp.RequestHandler):
     def get(self):
 	content_query = Content.all()	
-	tags_query = ContentTags.all()
+        tags_query = Tags.all()
+        tagstr = ""
 	pid = self.request.get('i')
 	edit = self.request.get('e')
         show_new_form = None
@@ -49,35 +50,37 @@ class Blog(webapp.RequestHandler):
 
         bookmark = self.request.get('bookmark')
         cat = self.request.get('c')
+        t = self.request.get('t')
         next = None
 	if (pid):
 		content_query.filter("content_id =",int(pid))
 		post = content_query.fetch(1)
-		tags_query.filter("content =",post)
-		tags = tags_query.fetch(5)
-		tagstr = ""
-		for tag in tags:
+		for tag in post[0].tags:
+                        tag_str = Tags.get(tag)
 			if tagstr != "":			
-				tagstr = tagstr + "," + tag.tag
+				tagstr = tagstr + "," + tag_str.tag
 			else:
-				tagstr = tag.tag
-		#publish_date = date.fromtimestamp(time.time())
+				tagstr = tag_str.tag
 		publish_date = dict()
 		publish_date['year'] = post[0].date.year
 		publish_date['day'] = post[0].date.day 
 		publish_date['month'] = post[0].date.month  
 		template_values = { 'post': post, 'single': 1, 'tags' : tagstr, 'show_new_form': show_new_form, 'greeting':greeting, 'publish_date':publish_date}
 	else:
+                posts = None
                 if bookmark:         
                     content_query.filter("content_id <=", int(bookmark))
                 if cat:
                     content_query.filter("type =",cat)
-		content_query.order('-content_id')
-                posts = content_query.fetch(PAGESIZE + 1)
-		if len(posts) == PAGESIZE + 1:     
+                else: 
+                    content_query.order('-content_id')
+                    posts = content_query.fetch(PAGESIZE + 1)
+                    if t:
+                        posts = posts.matched_tags.filter("tag =",t)
+		if len(posts) == PAGESIZE + 1:
                     next = posts[-1].content_id              
                 posts = posts[:PAGESIZE]    
-		template_values = { 'posts' : posts, 'next' : next, 'cat' : cat }
+		template_values = { 'posts' : posts, 'next' : next, 'cat' : cat, 'tag' : t}
 	if (edit):
 		path = os.path.join(os.path.dirname(__file__), 'base_edit.html')
 	else:
@@ -136,10 +139,12 @@ class PublishPost(webapp.RequestHandler):
 			if (tagstr):
 				tags = tagstr.split(",")
 				for tag in tags:		
-					tagged = ContentTags()
-					tagged.tag = tag
-					tagged.content = post
-					tagged.put()		
+					tag_key = Tags.all().filter("tag =",tag).get()
+                                        if not tag_key:
+                                            tag_key = Tags(tag = tag).put()
+                                        if tag_key not in post.tags:
+                                            post.tags.append(tag_key)
+                                post.put()            
 			status = "\m/ success"	    	 
 			
 		else:

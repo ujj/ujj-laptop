@@ -40,9 +40,18 @@
 <h2 class="posttitle">{{ post.0.title }}</h2>
 <span class="datetext">published: {{ publish_date.day}} / {{ publish_date.month}} / {{ publish_date.year}}</span>
 <p>{{ post.0.text}}</p>
-<p><span class="datetext">tagged under:</span> {{ post.0.tags}} </p>
+<p><span class="datetext">tagged under:</span> {{tags}} </p>
 <p><i><a href="/?i={{ post.0.content_id }}#disqus_thread"></a></i></p>
 <div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/ujj-laptop/embed.js"></script><noscript><a href="http://disqus.com/forums/ujj-laptop/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+{% endif %}
+
+{% if tag %}
+{% for post in posts %}
+<h2 class="posttitle"><a class="posttitle" href="?i={{ post.content.content_id }}">{{ post.content.title }}</a></h2>
+<p>{{ post.content.summary}} <a href="/?i={{ post.content.content_id }}">read full</a> </p>
+<br/>
+{% endfor %}
+
 {% else %}
 {% for post in posts %}
 <h2 class="posttitle"><a class="posttitle" href="?i={{ post.content_id }}">{{ post.title }}</a></h2>
