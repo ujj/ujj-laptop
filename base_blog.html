@@ -36,7 +36,7 @@
 <div id="main">
 
 {% if single %}
-<h2 class="posttitle">{{ post.0.title }}</h2>
+<h2 class="posttitle">{{ post.0.title }}</h2> {{post.0.date}}
 <span class="datetext">published: {{ publish_date.day}} / {{ publish_date.month}} / {{ publish_date.year}}</span>
 <p>{{ post.0.text}}</p>
 {% if tags %}
@@ -52,7 +52,7 @@
 
 {% else %}
 {% for post in posts %}
-<h2 class="posttitle"><a class="posttitle" href="?i={{ post.content_id }}">{{ post.title }}</a></h2>
+<h2 class="posttitle"><a class="posttitle" href="?i={{ post.content_id }}">{{ post.title }}</a></h2> {{ post.date}}
 <p>{{ post.summary}} <a href="/?i={{ post.content_id }}">read full</a> </p>
 <br/>
 {% endfor %}

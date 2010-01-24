@@ -1,6 +1,8 @@
 import os
 from google.appengine.ext.webapp import template
 
+from datetime import datetime
+
 import cgi
 import time
 
@@ -61,7 +63,7 @@ class Blog(webapp.RequestHandler):
                 greeting = ("<a href=\"%s\">Sign in</a>." %
                             users.create_login_url("/"))
 
-        bookmark = self.request.get('bookmark')
+        bookmark = datetime.strptime(self.request.get('bookmark'))
         cat = self.request.get('c')
         t = self.request.get('t')
         next = None
@@ -79,7 +81,7 @@ class Blog(webapp.RequestHandler):
 	else:
                 posts = None
                 if bookmark:         
-                    content_query.filter("content_id <=", int(bookmark))
+                    content_query.filter("date >=", bookmark)
                 if t: 
                     tag_key = Tags.all().filter("tag =",t).get()
                     posts = Content.all().filter("tags =",tag_key.key()).fetch(PAGESIZE + 1) 
@@ -87,11 +89,11 @@ class Blog(webapp.RequestHandler):
                     content_query.filter("type =",cat)
                     posts = content_query.fetch(PAGESIZE + 1)
                 else: 
-                    content_query.order('-content_id')
+                    content_query.order('-date')
                     posts = content_query.fetch(PAGESIZE + 1)
                         
 		if len(posts) == PAGESIZE + 1:
-                    next = posts[-1].content_id              
+                    next = posts[-1].date              
                 posts = posts[:PAGESIZE]    
 		template_values = { 'posts' : posts, 'next' : next, 'cat' : cat, 'tag' : t}
 	if (edit):
