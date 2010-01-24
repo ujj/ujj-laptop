@@ -42,6 +42,7 @@ class Blog(webapp.RequestHandler):
 	content_query = Content.all()	
         tags_query = Tags.all()
         tagstr = ""
+        tag_list = []
 	pid = self.request.get('i')
 	edit = self.request.get('e')
         show_new_form = None
@@ -69,15 +70,12 @@ class Blog(webapp.RequestHandler):
 		post = content_query.fetch(1)
 		for tag in post[0].tags:
                         tag_str = Tags.get(tag)
-			if tagstr != "":			
-				tagstr = tagstr + "," + tag_str.tag
-			else:
-				tagstr = tag_str.tag
+			tag_list.append(tag_str.tag)
 		publish_date = dict()
 		publish_date['year'] = post[0].date.year
 		publish_date['day'] = post[0].date.day 
 		publish_date['month'] = post[0].date.month  
-		template_values = { 'post': post, 'single': 1, 'tags' : tagstr, 'show_new_form': show_new_form, 'greeting':greeting, 'publish_date':publish_date}
+		template_values = { 'post': post, 'single': 1, 'tags' : tag_list, 'show_new_form': show_new_form, 'greeting':greeting, 'publish_date':publish_date}
 	else:
                 posts = None
                 if bookmark:         
@@ -87,6 +85,7 @@ class Blog(webapp.RequestHandler):
                     posts = Content.all().filter("tags =",tag_key.key()).fetch(PAGESIZE + 1) 
                 elif cat:
                     content_query.filter("type =",cat)
+                    posts = content_query.fetch(PAGESIZE + 1)
                 else: 
                     content_query.order('-content_id')
                     posts = content_query.fetch(PAGESIZE + 1)

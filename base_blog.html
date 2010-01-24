@@ -4,14 +4,13 @@
 {% if single %}
 	| {{ post.0.title }}	
 {% else %}
-    {% if not cat %}
-        | ujjwal grover's blog
-    {% else %}     
-         {% ifequal cat "about" %}
-            | about
-         {% else %}
-            | ujjwal grover's {{cat}} posts
-         {% endifequal %}
+    {% if tag %}
+        | posts tagged under {{ tag }}
+    {% endif %}
+    {% if cat %}
+        | ujjwal grover's {{cat}} posts
+    {% else %}
+        | ujjwal grover's blog       
     {% endif %}
 {% endif %}
 {% endblock %}
@@ -40,7 +39,13 @@
 <h2 class="posttitle">{{ post.0.title }}</h2>
 <span class="datetext">published: {{ publish_date.day}} / {{ publish_date.month}} / {{ publish_date.year}}</span>
 <p>{{ post.0.text}}</p>
-<p><span class="datetext">tagged under:</span> {{tags}} </p>
+{% if tags %}
+<p><span class="datetext">tagged under:</span> 
+{% for tag in tags %}
+<a href="/?t={{tag}}">{{tag}}</a>  
+{% endfor %}
+</p>
+{% endif %}
 <p><i><a href="/?i={{ post.0.content_id }}#disqus_thread"></a></i></p>
 <div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/ujj-laptop/embed.js"></script><noscript><a href="http://disqus.com/forums/ujj-laptop/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 
@@ -55,6 +60,9 @@
 
 {% if next %}
 <div id="paginat">
+{% if tag %}
+<a href="/?bookmark={{next}}&t={{tag}}">older</a>
+{% endif %} 
 {% if cat %}
 <a href="/?bookmark={{next}}&cat={{cat}}">older</a>
 {% endif %} 
