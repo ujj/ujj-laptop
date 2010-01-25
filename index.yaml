@@ -12,6 +12,18 @@ indexes:
 
 - kind: Content
   properties:
+  - name: tags
+  - name: date
+    direction: desc
+
+- kind: Content
+  properties:
   - name: type
   - name: content_id
+    direction: desc
+
+- kind: Content
+  properties:
+  - name: type
+  - name: date
     direction: desc

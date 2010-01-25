@@ -20,7 +20,7 @@ class Content(db.Model):
     content_id = db.IntegerProperty()
     type = db.StringProperty()
     summary = db.StringProperty()
-    date = db.DateTimeProperty(auto_now_add=True)  
+    date = db.StringProperty()
     tags = db.ListProperty(db.Key)
 
 class Tags(db.Model): 
@@ -49,6 +49,7 @@ class Blog(webapp.RequestHandler):
 	edit = self.request.get('e')
         show_new_form = None
         greeting = None
+        bookmark = None
         if edit:
             user = users.get_current_user()
             if user:
@@ -62,8 +63,7 @@ class Blog(webapp.RequestHandler):
             else:
                 greeting = ("<a href=\"%s\">Sign in</a>." %
                             users.create_login_url("/"))
-
-        bookmark = datetime.strptime(self.request.get('bookmark'))
+        bookmark =  self.request.get('bookmark')
         cat = self.request.get('c')
         t = self.request.get('t')
         next = None
@@ -73,27 +73,31 @@ class Blog(webapp.RequestHandler):
 		for tag in post[0].tags:
                         tag_str = Tags.get(tag)
 			tag_list.append(tag_str.tag)
-		publish_date = dict()
-		publish_date['year'] = post[0].date.year
-		publish_date['day'] = post[0].date.day 
-		publish_date['month'] = post[0].date.month  
+                publish_date = dict()
+                publish_date['year'] = post[0].date[0:4]
+                publish_date['month'] = post[0].date[4:6]
+                publish_date['day'] = post[0].date[6:8]
 		template_values = { 'post': post, 'single': 1, 'tags' : tag_list, 'show_new_form': show_new_form, 'greeting':greeting, 'publish_date':publish_date}
 	else:
                 posts = None
                 if bookmark:         
-                    content_query.filter("date >=", bookmark)
+                    content_query.filter("date <=", bookmark)
                 if t: 
                     tag_key = Tags.all().filter("tag =",t).get()
-                    posts = Content.all().filter("tags =",tag_key.key()).fetch(PAGESIZE + 1) 
+                    content_query = Content.all().filter("tags =",tag_key.key())
+                    if bookmark:
+                        content_query.filter("date <=",bookmark)
+                    content_query.order("-date")
+                    posts = content_query.fetch(PAGESIZE + 1) 
                 elif cat:
-                    content_query.filter("type =",cat)
+                    content_query.filter("type =",cat).order("-date")
                     posts = content_query.fetch(PAGESIZE + 1)
                 else: 
                     content_query.order('-date')
                     posts = content_query.fetch(PAGESIZE + 1)
                         
 		if len(posts) == PAGESIZE + 1:
-                    next = posts[-1].date              
+                    next = posts[-1].date
                 posts = posts[:PAGESIZE]    
 		template_values = { 'posts' : posts, 'next' : next, 'cat' : cat, 'tag' : t}
 	if (edit):
@@ -146,8 +150,10 @@ class PublishPost(webapp.RequestHandler):
 				post.title = title
 				post.text = content
 				post.type = ptype
-				post.summary = summary
-				post.put()
+				post.summary = summary       	
+                                ts = datetime.now().strftime("%Y%m%d%H%m%S")
+                                post.date = ts
+                                post.put()
 				content_id = post.key().id()
 				post.content_id = int(content_id)
 		       		post.put()
